@@ -4,6 +4,7 @@ import { Provider as StyletronProvider } from 'styletron-react'
 import { LightTheme, BaseProvider } from 'baseui'
 import { EditorProvider } from './uibox'
 import { AppProvider } from './contexts/AppContext'
+import { ToastProvider } from './components/ToastProvider'
 const engine = new Styletron()
 
 const Providers: FC = ({ children }) => {
@@ -11,7 +12,12 @@ const Providers: FC = ({ children }) => {
     <StyletronProvider value={engine}>
       <EditorProvider>
         <BaseProvider theme={LightTheme}>
-          <AppProvider>{children}</AppProvider>
+          <AppProvider>
+            <>
+              {children}
+              <ToastProvider />
+            </>
+          </AppProvider>
         </BaseProvider>
       </EditorProvider>
     </StyletronProvider>

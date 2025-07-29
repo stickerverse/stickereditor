@@ -2,6 +2,7 @@ import ReactDOM from 'react-dom'
 import reportWebVitals from './reportWebVitals'
 import Providers from './Providers'
 import Routes from './Routes'
+import './styles/sticker-design-system.css'
 
 ReactDOM.render(
   <Providers>
