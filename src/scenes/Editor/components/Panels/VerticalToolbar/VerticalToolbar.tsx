@@ -90,7 +90,7 @@ const VerticalToolbar = () => {
   // Check completed steps based on configuration
   useEffect(() => {
     const completed: string[] = [];
-    if (configuration.material) completed.push('upload');
+    if (configuration.image) completed.push('upload');
     if (configuration.outlineType) completed.push('outline');
     if (configuration.material) completed.push('material');
     setCompletedSteps(completed);
