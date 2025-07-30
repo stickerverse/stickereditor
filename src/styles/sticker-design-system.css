@@ -1,0 +1,178 @@
+:root {
+  /* Preserve your existing colors */
+  --background-dark: #18191A;
+  --background-light: #242526;
+  --text-primary: #E4E6EB;
+  --text-secondary: #B0B3B8;
+  --border-color: #3A3B3C;
+  
+  /* New sticker-specific colors */
+  --interactive-accent: #FFD700;
+  --interactive-accent-hover: #FFC700;
+  --success: #4ADE80;
+  --success-light: #86EFAC;
+  --error: #EF4444;
+  --warning: #F59E0B;
+  --panel-active: #2D2E2F;
+  
+  /* Animation timings */
+  --animation-fast: 150ms;
+  --animation-normal: 300ms;
+  --animation-slow: 500ms;
+  --animation-spring: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  
+  /* New spacing system */
+  --panel-width: 360px;
+  --toolbar-height: 80px;
+  --navbar-height: 70px;
+  
+  /* Shadows for depth */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-glow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+/* Global animation classes */
+.sticker-panel-enter {
+  animation: slideInLeft var(--animation-normal) var(--animation-spring);
+}
+
+.sticker-panel-exit {
+  animation: slideOutLeft var(--animation-normal) ease-in;
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutLeft {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+/* Micro-interaction styles */
+.interactive-element {
+  transition: all var(--animation-fast) ease;
+}
+
+.interactive-element:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.pulse-animation {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 215, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
+  }
+}
+
+/* Sticker Configuration Panel Styles */
+.sticker-config-panel {
+  padding: 20px;
+  background: var(--background-light);
+  border-radius: 12px;
+  color: var(--text-primary);
+  max-width: var(--panel-width);
+}
+
+.sticker-config-panel h3 {
+  color: var(--interactive-accent);
+  margin-bottom: 20px;
+  font-size: 1.2em;
+}
+
+.config-section {
+  margin-bottom: 16px;
+}
+
+.config-section label {
+  display: block;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+.config-section input,
+.config-section select {
+  background: var(--background-dark);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-primary);
+  padding: 8px 12px;
+  margin-right: 8px;
+  transition: border-color var(--animation-fast) ease;
+}
+
+.config-section input:focus,
+.config-section select:focus {
+  outline: none;
+  border-color: var(--interactive-accent);
+  box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
+}
+
+.price-section {
+  background: var(--panel-active);
+  padding: 12px;
+  border-radius: 8px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.price-section strong {
+  color: var(--success);
+  font-size: 1.1em;
+}
+
+.panel-controls {
+  display: flex;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.panel-controls button {
+  flex: 1;
+  background: var(--background-dark);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all var(--animation-fast) ease;
+}
+
+.panel-controls button:hover {
+  background: var(--panel-active);
+  transform: translateY(-1px);
+}
+
+.panel-controls button.active {
+  background: var(--interactive-accent);
+  color: var(--background-dark);
+  border-color: var(--interactive-accent);
+  font-weight: 600;
+}
