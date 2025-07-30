@@ -6,7 +6,6 @@ import Panels from './components/Panels'
 import Toolbox from './components/Toolbox'
 import Footer from './components/Footer'
 import Editor from '@/uibox'
-import OnboardingTooltip from '@/components/Onboarding/OnboardingTooltip'
 
 function App() {
   const { setTemplates, setShapes } = useAppContext()
@@ -39,7 +38,6 @@ function App() {
           <Footer />
         </div>
       </div>
-      <OnboardingTooltip />
     </div>
   )
 }

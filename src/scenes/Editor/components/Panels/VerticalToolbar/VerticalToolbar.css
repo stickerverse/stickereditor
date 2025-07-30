@@ -240,3 +240,25 @@
     gap: 0.5rem;
   }
 }
+
+/* Additional animations */
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0px 0px 0px rgba(255, 215, 0, 0);
+  }
+  50% {
+    box-shadow: 0px 0px 20px rgba(255, 215, 0, 0.6);
+  }
+}
+
+@keyframes celebration {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.1) rotate(5deg);
+  }
+  75% {
+    transform: scale(1.1) rotate(-5deg);
+  }
+}
