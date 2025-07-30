@@ -226,11 +226,19 @@ const VerticalToolbarBasic = () => {
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <HelpButton 
           title="Help & Onboarding"
-          onClick={() => alert('Welcome to Sticker Editor! Use the toolbar to create amazing stickers.')}
+          onClick={() => setHelpModalOpen(true)}
         >
           ?
         </HelpButton>
       </div>
+      {isHelpModalOpen && (
+        <Modal>
+          <ModalContent>
+            <p>Welcome to Sticker Editor! Use the toolbar to create amazing stickers.</p>
+            <CloseButton onClick={() => setHelpModalOpen(false)}>Close</CloseButton>
+          </ModalContent>
+        </Modal>
+      )}
     </Container>
   );
 };
