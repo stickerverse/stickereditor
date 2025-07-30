@@ -1,17 +1,19 @@
 import { create } from 'zustand';
 import { devtools, persist, subscribeWithSelector } from 'zustand/middleware';
 
+// Interface for a single material option
 interface Material {
   id: string;
   name: string;
   type: 'vinyl' | 'paper' | 'holographic' | 'transparent';
-  price: number;
-  durability: number;
-  preview: string;
+  price: number; // Price per square unit (e.g., square inch)
+  durability: number; // A rating from 1-5
+  preview: string; // URL to an image
   description: string;
   features: string[];
 }
 
+// The main configuration for the sticker being designed
 interface StickerConfiguration {
   material: Material | null;
   dimensions: {
@@ -21,10 +23,11 @@ interface StickerConfiguration {
   };
   quantity: number;
   outlineType: 'contour' | 'square' | 'circle' | 'custom';
-  bleedSize: number;
-  price: number;
+  bleedSize: number; // In inches
+  price: number; // Total calculated price
 }
 
+// State related to user onboarding and help guides
 interface OnboardingState {
   isFirstVisit: boolean;
   currentStep: number;
@@ -32,12 +35,14 @@ interface OnboardingState {
   tooltipsShown: string[];
 }
 
+// Tracking user activity within the session
 interface UserActivity {
   lastAction: string;
   timestamp: number;
   sessionDuration: number;
 }
 
+// The complete interface for our global state store
 interface StickerStore {
   // Configuration
   configuration: StickerConfiguration;
@@ -67,19 +72,20 @@ interface StickerStore {
   calculatePrice: () => number;
   bulkDiscounts: { quantity: number; discount: number }[];
   
-  // Undo/Redo for configuration
+  // Undo/Redo for configuration changes
   configHistory: StickerConfiguration[];
   configHistoryIndex: number;
   undoConfig: () => void;
   redoConfig: () => void;
   
-  // Auto-save
+  // Auto-save status
   lastSaved: number | null;
-  isDirty: boolean;
+  isDirty: boolean; // True if there are unsaved changes
   markDirty: () => void;
   markClean: () => void;
 }
 
+// Default state for a new user/session
 const defaultConfiguration: StickerConfiguration = {
   material: null,
   dimensions: { width: 3, height: 3, unit: 'inches' },
@@ -93,7 +99,7 @@ const useStickerStore = create<StickerStore>()(
   devtools(
     persist(
       subscribeWithSelector((set, get) => ({
-        // Configuration
+        // Configuration State
         configuration: defaultConfiguration,
         updateConfiguration: (config) => {
           const currentConfig = get().configuration;
@@ -106,24 +112,23 @@ const useStickerStore = create<StickerStore>()(
             isDirty: true,
           }));
           
-          // Recalculate price
-          get().calculatePrice();
+          get().calculatePrice(); // Recalculate price on any configuration change
         },
         
-        // Materials
+        // Materials State
         materials: [],
         setMaterials: (materials) => set({ materials }),
         selectMaterial: (material) => {
           get().updateConfiguration({ material });
         },
         
-        // UI State
-        activePanel: 'Templates',
+        // UI Panel State
+        activePanel: 'Templates', // Default active panel
         setActivePanel: (panel) => set({ activePanel: panel }),
         isPanelAnimating: false,
         setPanelAnimating: (animating) => set({ isPanelAnimating: animating }),
         
-        // Onboarding
+        // Onboarding State
         onboarding: {
           isFirstVisit: true,
           currentStep: 0,
@@ -140,7 +145,7 @@ const useStickerStore = create<StickerStore>()(
             },
           })),
         
-        // User Activity
+        // User Activity Tracking
         userActivity: {
           lastAction: '',
           timestamp: Date.now(),
@@ -155,7 +160,7 @@ const useStickerStore = create<StickerStore>()(
             },
           }),
         
-        // Pricing
+        // Pricing Logic
         calculatePrice: () => {
           const { material, dimensions, quantity } = get().configuration;
           if (!material) return 0;
@@ -166,10 +171,10 @@ const useStickerStore = create<StickerStore>()(
           
           const applicableDiscount = bulkDiscounts
             .filter((d) => quantity >= d.quantity)
-            .sort((a, b) => b.discount - a.discount)[0];
+            .sort((a, b) => b.quantity - a.quantity)[0]; // Corrected sorting
           
-          const discount = applicableDiscount ? applicableDiscount.discount : 0;
-          const totalPrice = basePrice * quantity * (1 - discount / 100);
+          const discountPercentage = applicableDiscount ? applicableDiscount.discount : 0;
+          const totalPrice = basePrice * quantity * (1 - discountPercentage / 100);
           
           set((state) => ({
             configuration: { ...state.configuration, price: totalPrice },
@@ -184,37 +189,42 @@ const useStickerStore = create<StickerStore>()(
           { quantity: 500, discount: 40 },
         ],
         
-        // History
+        // History (Undo/Redo)
         configHistory: [defaultConfiguration],
         configHistoryIndex: 0,
         undoConfig: () => {
           const { configHistoryIndex, configHistory } = get();
           if (configHistoryIndex > 0) {
+            const newIndex = configHistoryIndex - 1;
             set({
-              configHistoryIndex: configHistoryIndex - 1,
-              configuration: configHistory[configHistoryIndex - 1],
+              configHistoryIndex: newIndex,
+              configuration: configHistory[newIndex],
+              isDirty: true,
             });
           }
         },
         redoConfig: () => {
           const { configHistoryIndex, configHistory } = get();
           if (configHistoryIndex < configHistory.length - 1) {
+            const newIndex = configHistoryIndex + 1;
             set({
-              configHistoryIndex: configHistoryIndex + 1,
-              configuration: configHistory[configHistoryIndex + 1],
+              configHistoryIndex: newIndex,
+              configuration: configHistory[newIndex],
+              isDirty: true,
             });
           }
         },
         
-        // Auto-save
+        // Auto-save flags
         lastSaved: null,
         isDirty: false,
         markDirty: () => set({ isDirty: true }),
         markClean: () => set({ isDirty: false, lastSaved: Date.now() }),
       })),
       {
-        name: 'sticker-editor-storage',
+        name: 'sticker-editor-storage', // Name for localStorage key
         partialize: (state) => ({
+          // Only persist these parts of the store
           configuration: state.configuration,
           onboarding: state.onboarding,
           materials: state.materials,
