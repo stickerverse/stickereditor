@@ -23,9 +23,14 @@ export const panelListItems = [
     id: 'background',
     name: 'Background',
   },
+  {
+    id: 'materials',
+    name: 'Materials',
+  },
 ]
 
 export enum PanelType {
   TEMPLATES = 'Templates',
   BACKGROUND = 'Background',
+  MATERIALS = 'Materials',
 }
