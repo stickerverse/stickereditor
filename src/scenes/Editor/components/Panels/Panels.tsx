@@ -1,11 +1,11 @@
 import { Fragment } from 'react'
 import PanelItem from './PanelItem'
-import PanelsList from './PanelsList'
+import VerticalToolbar from './VerticalToolbar/VerticalToolbar'
 
 function Panels() {
   return (
     <Fragment>
-      <PanelsList />
+      <VerticalToolbar />
       <PanelItem />
     </Fragment>
   )
